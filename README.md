@@ -1,5 +1,9 @@
 # Predictive-Modeling-of-Medical-Insurance-Charges
 
+# Table of contents 
+- [Introduction](#introduction)
+- [Exploratory data analysis (EDA) and pre-processing](#Exploratory data analysis (EDA) and pre-processing)
+
 # Introduction
 This model aims to predict medical insurance charges, taking into account potential factors that may influence the varying costs of medical care. The predictive power derived from the models will prove crucial to medical insurance providers in characterizing optimal resource allocation and developing effective pricing strategies.
 
