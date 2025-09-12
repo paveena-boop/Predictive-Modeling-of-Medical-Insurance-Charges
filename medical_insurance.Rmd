@@ -8,7 +8,7 @@ knitr::opts_chunk$set(echo = TRUE)
 ```
 
 #install required packages
-```{r setup, include=FALSE}
+```{r}
 install.packages("tidyverse")
 install.packages("dplyr")
 install.packages("ggplot2")
@@ -29,7 +29,7 @@ library(pROC)
 
 
 #Load the dataset
-```{r pressure, echo=FALSE}
+```{r}
 data <- read_csv("medical_insurance.csv")
 View(data)
 ```
@@ -37,7 +37,7 @@ View(data)
 # Exploratory data analysis (EDA) and pre-processing
 To explore the dataset, I will create a correlogram - examining the prevalent trends and relationships amongst the variables, leading the primary exploration of data wrangling.
 
-```{r pressure, echo=FALSE}
+```{r}
 summary(data)
 str(data)
 
@@ -65,7 +65,7 @@ We can deduce that the numerical predictors, ‘age’ (0.299) and ‘bmi’ (0.
 ##Model fitting 
 Prior to fitting the desired model, I will split the observations into a train-test ratio of 80/20 to strengthen the predictive power of the model I want to design. Doing so will allow the model to gain higher generalizability to unforeseen data, employing the portion reserved for testing as a real-world proxy.
 
-```{r pressure, echo=FALSE}
+```{r}
 #test-train split 
 set.seed(123)
 trainIndex <- createDataPartition(data$charges, p=0.8, list=FALSE)
@@ -75,7 +75,7 @@ test_data <- data[-trainIndex, ]
 
 Prior to forming my models, I will employ the subset selection technique on the training dataset, identifying the predictors that will gather the highest predictive ability towards medical insurance ‘charges’. The dataset follows a low-dimensional setting and is not subjected to a long array of complex predictors, authorizing my choice of approach for variable selection.
 
-```{r pressure, echo=FALSE}
+```{r}
 #determine variable selection to best fit the model
 #subset selection
 install.packages("leaps")
@@ -109,7 +109,7 @@ coef(regfit.full, 6)
 The corresponding C_p and BIC select the model with 4 predictors to be the best fit model for this dataset. BIC selects the model with 4 predictors to show the lowest BIC score, prioritizing goodness of fit and simplicity. This is because the BIC statistic tends to behave in a stricter manner, attaching heavier penalty on models with several variables and higher complexity. C_p on the other hand, assumes linearity, which restricts the scope of the models I can form to best predict ‘charges’. For this reason, I will follow the suggestion made by R^2, choosing to obtain higher explanatory power over parsimony, selecting the 6 predictors evident in table 1 to be my key variables.
 
 #Model 1 - Linear Model
-```{r pressure, echo=FALSE}
+```{r}
 ##(1) linear model
 model1 <- lm(charges ~ age + bmi + region + smoker + children, data=train_data)
 summary(model1)
@@ -131,7 +131,7 @@ range(residuals1)
 Now fitting my models, my primary design will be a linear model, combining the predictive power of the 6 variables previously chosen. The model produces a MSE test score of 29930845 suggesting a linear model may not be a good fit for the data. This poses me to question the assumed linearity within the dataset, and to consider alternative  approaches like the General Additive Model (GAM).
 
 #Model 2 - GAM
-```{r pressure, echo=FALSE}
+```{r}
 library(mgcv)
 model_gam <- gam(charges ~ smoker + region + as.factor(children) + s(age) + s(bmi),
                  data = train_data)
@@ -170,7 +170,7 @@ The GAM can address covert complexities and non-linear predictive inconsistencie
 The ‘bmi’ in the GAM plot display greater complexity, somewhat mimicking an upside-down u-shape that limits interpretability. For this reason, I will transform ‘bmi’ into a categorical variable using the standard clinical classifications established by WHO. Additionally, I will adopt feature engineering to include an interaction term for bmi_category*smoker, targeting the unexplained effect that may stem from the large coefficient observed from ‘smoker’. This term can account for overlooked interactions like higher medical charges that appear amongst obese individuals who smoke, risking cardiovascular disease, respiratory problems, and other comorbidities compared to obese non-smokers or normal-weight smokers.
 
 #Model 3 - GAM 2
-```{r pressure, echo=FALSE}
+```{r}
 #convert bmi into a categorical variable for interpretability of GAM plot
 train_data$bmi_category <- cut(train_data$bmi, breaks = c(0, 18.5, 25, 30, Inf),
                                labels = c("underweight", "normal", "overweight", "obese"))
@@ -215,7 +215,7 @@ The improved GAM generates a MSE of 22574364, showing significant improvement fr
 My next model is a regression tree that prioritize simplicity and interpretability. It is primarily concerned with the variables ‘smoker’, ‘age’, and ‘bmi’ that hold leading coefficients as evident in Figure 6; overlooking other variables that may hold similar significance.
 
 #Model 4 - Regression Tree
-```{r pressure, echo=FALSE}
+```{r}
 tree_model <- tree(charges ~ age + children + region + bmi + smoker, data = train_data)
 summary(tree_model)
 
@@ -252,7 +252,7 @@ The regression tree already presents itself to be simple enough, inserting pruni
 My final design will be the Random Forest model, suitable for datasets with multiple predictors, welcoming complexity. It will address the shortcomings rooted in the regression tree model, targeting oversimplification and capturing potential interactions between the variables at hand to improve predictive power.
 
 #Model 5 - Random Forest 
-```{r pressure, echo=FALSE}
+```{r}
 install.packages("randomForest")
 library(randomForest)
 # Fit a Random Forest model
@@ -291,7 +291,7 @@ varImpPlot(rf_model)
 The Random Forest plot ranks the significant variables in terms of its importance to the model’s predictive accuracy, extending the hierarchy established by the regression tree and generating its test MSE to be 23755135.
 
 ##Model Selection
-```{r pressure, echo=FALSE}
+```{r}
 #model comparison: predicted vs actual charges
 # Assuming you have predictions in a data frame like this:
 install.packages("tidyr")
@@ -328,7 +328,7 @@ print(results)
 ```
 
 ##Model evaluation
-```{r pressure, echo=FALSE}
+```{r}
 #10 fold k-cross-validation
 set.seed(123)
 train_control <- trainControl(method="cv", number=10, savePredictions=TRUE)
