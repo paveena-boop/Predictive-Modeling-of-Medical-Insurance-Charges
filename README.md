@@ -5,11 +5,11 @@
 - [Introduction](#introduction)
 - [Exploratory data analysis (EDA) and pre-processing](#exploratory-data-analysis-(EDA)-and-pre-processing)
 - [Model fitting](#model-fitting)
-  - [Model 1 - Linear Model](#model-1-linear-model)
-  - [Model 2 - GAM](#model-2-gam)
-  - [Model 3 - Improved GAM](#model-3-improved-gam)
-  - [Model 4 - Regression Tree](#model-4-regression-tree)
-  - [Model 5 - Random Forest](#model-5-random-forest)
+  - [Model 1 - Linear Model](##model-1-linear-model)
+  - [Model 2 - GAM](##model-2-gam)
+  - [Model 3 - Improved GAM](##model-3-improved-gam)
+  - [Model 4 - Regression Tree](##model-4-regression-tree)
+  - [Model 5 - Random Forest](##model-5-random-forest)
  - [Model Selection](#model-selection)
  - [Model evaluation](#model-evaluation)
  - [Suggestions for improvement](#suggestions-for-improvement)
@@ -348,7 +348,7 @@ My final model – GAM2 remains significant, explaining 87.4% of the variations 
 
 
 # Suggestions for improvement
-The models were designed with priority for explanatory power over parsimony due to the objective of the report. I assumed preference for greater accuracy over interpretability to critically account for all possible attributes that can impact medical charges and vary on an individual level. Although higher variability is captured, my models may overexert on flexibility and consequently succumb to overfitting. In that case, the incorporation of lasso or ridge regularization may help correct for this overfitting. The challenges toward the interpretability of the statistics may further present as an obstacle in correctly establishing pricing strategies and resource allocation.
+The models were designed with priority for explanatory power over parsimony. I assumed preference for greater accuracy over interpretability to critically account for all possible attributes that can impact medical charges and vary on an individual level. Although higher variability is captured, my models may overexert on flexibility and consequently succumb to overfitting. In that case, the incorporation of lasso or ridge regularization may help correct for this overfitting. The challenges toward the interpretability of the statistics may further present as an obstacle in correctly establishing pricing strategies and resource allocation.
 
 While GAM2 performs relatively well, addressing the signs of overfitting will amplify the model’s predictive ability. It will prove beneficial to incorporate cross-validation at the stage prior to fitting the model, identifying the optimal number of spline terms that maximize accuracy.
 
