@@ -1,11 +1,20 @@
 # Predictive-Modeling-of-Medical-Insurance-Charges
 
-# Table of contents 
+## Table of contents 
 - [Data Set](#data-set)
 - [Introduction](#introduction)
 - [Exploratory data analysis (EDA) and pre-processing](#exploratory-data-analysis-(EDA)-and-pre-processing)
+- [Model fitting](#model-fitting)
+  - [Model 1 - Linear Model](#model-1-linear-model)
+  - [Model 2 - GAM](#model-2-gam)
+  - [Model 3 - Improved GAM](#model-3-improved-gam)
+  - [Model 4 - Regression Tree](#model-4-regression-tree)
+  - [Model 5 - Random Forest](#model-5-random-forest)
+ - [Model Selection](#model-selection)
+ - [Model evaluation](#model-evaluation)
+ - [Suggestions for improvement](#suggestions-for-improvement)
 
-# Data Set
+## Data Set
 The dataset ‘medical_insurance.csv’ consists of 1338 observations alongside 7 variables. The dependent variable ‘charges’ holds a quantitative nature, being recognized as a continuous variable, allowing us to advance using a regression model. 
 Description of variables:
 age: Age of the individual (in years).
@@ -46,7 +55,7 @@ ggplot(data, aes(x=factor(smoker), y=charges)) +
 
 We can deduce that the numerical predictors, ‘age’ (0.299) and ‘bmi’ (0.198) show greater correlation with the outcome variable ‘charges’ . This is indicative of the complementary increase in the volume of medical care along its charges that accompany growing age and bmi. Amongst categorical variables, ‘smoker’ predicts individuals who smoke to be more susceptible to higher medical chargers. The boxplot supports this correlation, where smokers displays a higher mean and range of charges compared to non-smokers, making clear the effect of smoking history on medical insurance prices. The correlogram also display faint signs of collinearity between ‘ages’ and ‘bmi’, holding a relatively low correlational strength of 0.109 supported by a 0.05 significance. The weak relationship limits its ability to disturb the combinatorial significance of the predictors, expunging the need to address it at this stage.
 
-##Model fitting 
+# Model fitting 
 To initiate, I will split the observations into a train-test ratio of 80/20 to strengthen the predictive power of the model I want to design. Doing so will allow the model to gain higher generalizability to unforeseen data, employing the portion reserved for testing as a real-world proxy.
 
 ```{r}
@@ -92,7 +101,7 @@ coef(regfit.full, 6)
 
 The corresponding C_p and BIC select the model with 4 predictors to be the best fit model for this dataset. BIC selects the model with 4 predictors to show the lowest BIC score, prioritizing goodness of fit and simplicity. This is because the BIC statistic tends to behave in a stricter manner, attaching heavier penalty on models with several variables and higher complexity. C_p on the other hand, assumes linearity, which restricts the scope of the models I can form to best predict ‘charges’. For this reason, I will follow the suggestion made by R^2, choosing to obtain higher explanatory power over parsimony, selecting the 6 predictors evident in table 1 to be my key variables.
 
-#Model 1 - Linear Model
+## Model 1 - Linear Model
 ```{r}
 ##(1) linear model
 model1 <- lm(charges ~ age + bmi + region + smoker + children, data=train_data)
@@ -114,7 +123,7 @@ range(residuals1)
 
 Now fitting my models, my primary design will be a linear model, combining the predictive power of the 6 variables previously chosen. The model produces a MSE test score of 29930845 suggesting a linear model may not be a good fit for the data. This poses me to question the assumed linearity within the dataset, and to consider alternative  approaches like the General Additive Model (GAM).
 
-#Model 2 - GAM
+## Model 2 - GAM
 ```{r}
 library(mgcv)
 model_gam <- gam(charges ~ smoker + region + as.factor(children) + s(age) + s(bmi),
@@ -153,7 +162,7 @@ The GAM can address covert complexities and non-linear predictive inconsistencie
 
 The ‘bmi’ in the GAM plot display greater complexity, somewhat mimicking an upside-down u-shape that limits interpretability. For this reason, I will transform ‘bmi’ into a categorical variable using the standard clinical classifications established by WHO. Additionally, I will adopt feature engineering to include an interaction term for bmi_category*smoker, targeting the unexplained effect that may stem from the large coefficient observed from ‘smoker’. This term can account for overlooked interactions like higher medical charges that appear amongst obese individuals who smoke, risking cardiovascular disease, respiratory problems, and other comorbidities compared to obese non-smokers or normal-weight smokers.
 
-#Model 3 - GAM 2
+## Model 3 - Improved GAM
 ```{r}
 #convert bmi into a categorical variable for interpretability of GAM plot
 train_data$bmi_category <- cut(train_data$bmi, breaks = c(0, 18.5, 25, 30, Inf),
@@ -198,7 +207,7 @@ The improved GAM generates a MSE of 22574364, showing significant improvement fr
 
 My next model is a regression tree that prioritize simplicity and interpretability. It is primarily concerned with the variables ‘smoker’, ‘age’, and ‘bmi’ that hold leading coefficients as evident in Figure 6; overlooking other variables that may hold similar significance.
 
-#Model 4 - Regression Tree
+# Model 4 - Regression Tree
 ```{r}
 tree_model <- tree(charges ~ age + children + region + bmi + smoker, data = train_data)
 summary(tree_model)
@@ -235,7 +244,7 @@ The regression tree already presents itself to be simple enough, inserting pruni
 
 My final design will be the Random Forest model, suitable for datasets with multiple predictors, welcoming complexity. It will address the shortcomings rooted in the regression tree model, targeting oversimplification and capturing potential interactions between the variables at hand to improve predictive power.
 
-#Model 5 - Random Forest 
+# Model 5 - Random Forest 
 ```{r}
 install.packages("randomForest")
 library(randomForest)
@@ -274,7 +283,7 @@ varImpPlot(rf_model)
 
 The Random Forest plot ranks the significant variables in terms of its importance to the model’s predictive accuracy, extending the hierarchy established by the regression tree and generating its test MSE to be 23755135.
 
-##Model Selection
+# Model Selection
 ```{r}
 #model comparison: predicted vs actual charges
 # Assuming you have predictions in a data frame like this:
@@ -311,7 +320,7 @@ results <- rbind(
 print(results)
 ```
 
-##Model evaluation
+# Model evaluation
 ```{r}
 #10 fold k-cross-validation
 set.seed(123)
@@ -338,7 +347,7 @@ For the final selection of my model, I will rely on MSE to evaluate how well eac
 My final model – GAM2 remains significant, explaining 87.4% of the variations in charges maintaining the goodness of fit of the model. Additionally, I executed k-fold cross validation (cv) (10 folds) to determine how well it performs on independent data. I choose this approach over LOOCV to evade the higher variance that accompanies LOOCV’s test errors. Table 5 (green) show the cv’s preference for the FALSE model, basing it on the lower RMSE – 4422.170. The GAM fitted to the training dataset is slightly more flexible in comparison and can capture additional noise specific to the training dataset. This may not generalize well to the testing data set and subsequently display signs of overfitting as seen with the cv displaying lower RMSE and R-squared in comparison to the GAM based on the training dataset.
 
 
-##Suggestions for improvement:
+# Suggestions for improvement
 The models were designed with priority for explanatory power over parsimony due to the objective of the report. I assumed preference for greater accuracy over interpretability to critically account for all possible attributes that can impact medical charges and vary on an individual level. Although higher variability is captured, my models may overexert on flexibility and consequently succumb to overfitting. In that case, the incorporation of lasso or ridge regularization may help correct for this overfitting. The challenges toward the interpretability of the statistics may further present as an obstacle in correctly establishing pricing strategies and resource allocation.
 
 While GAM2 performs relatively well, addressing the signs of overfitting will amplify the model’s predictive ability. It will prove beneficial to incorporate cross-validation at the stage prior to fitting the model, identifying the optimal number of spline terms that maximize accuracy.
