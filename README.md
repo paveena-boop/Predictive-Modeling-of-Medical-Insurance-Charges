@@ -5,11 +5,11 @@
 - [Introduction](#introduction)
 - [Exploratory data analysis (EDA) and pre-processing](#exploratory-data-analysis-(EDA)-and-pre-processing)
 - [Model fitting](#model-fitting)
-  - [Model 1 - Linear Model](##model-1-linear-model)
-  - [Model 2 - GAM](##model-2-gam)
-  - [Model 3 - Improved GAM](##model-3-improved-gam)
-  - [Model 4 - Regression Tree](##model-4-regression-tree)
-  - [Model 5 - Random Forest](##model-5-random-forest)
+  - [Model 1 - Linear Model](#model-1-linear-model)
+  - [Model 2 - GAM](#model-2-gam)
+  - [Model 3 - Improved GAM](#model-3-improved-gam)
+  - [Model 4 - Regression Tree](#model-4-regression-tree)
+  - [Model 5 - Random Forest](#model-5-random-forest)
  - [Model Selection](#model-selection)
  - [Model evaluation](#model-evaluation)
  - [Suggestions for improvement](#suggestions-for-improvement)
@@ -207,7 +207,7 @@ The improved GAM generates a MSE of 22574364, showing significant improvement fr
 
 My next model is a regression tree that prioritize simplicity and interpretability. It is primarily concerned with the variables ‘smoker’, ‘age’, and ‘bmi’ that hold leading coefficients as evident in Figure 6; overlooking other variables that may hold similar significance.
 
-# Model 4 - Regression Tree
+## Model 4 - Regression Tree
 ```{r}
 tree_model <- tree(charges ~ age + children + region + bmi + smoker, data = train_data)
 summary(tree_model)
@@ -244,7 +244,7 @@ The regression tree already presents itself to be simple enough, inserting pruni
 
 My final design will be the Random Forest model, suitable for datasets with multiple predictors, welcoming complexity. It will address the shortcomings rooted in the regression tree model, targeting oversimplification and capturing potential interactions between the variables at hand to improve predictive power.
 
-# Model 5 - Random Forest 
+## Model 5 - Random Forest 
 ```{r}
 install.packages("randomForest")
 library(randomForest)
