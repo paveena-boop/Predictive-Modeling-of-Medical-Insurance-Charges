@@ -16,6 +16,7 @@
 
 ## Data Set
 The dataset ‘medical_insurance.csv’ consists of 1338 observations alongside 7 variables. The dependent variable ‘charges’ holds a quantitative nature, being recognized as a continuous variable, allowing us to advance using a regression model. 
+
 Description of variables:
 - age: Age of the individual (in years).
 - sex: Gender of the individual (male/female).
