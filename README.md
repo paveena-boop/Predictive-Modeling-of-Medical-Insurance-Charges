@@ -17,13 +17,13 @@
 ## Data Set
 The dataset ‘medical_insurance.csv’ consists of 1338 observations alongside 7 variables. The dependent variable ‘charges’ holds a quantitative nature, being recognized as a continuous variable, allowing us to advance using a regression model. 
 Description of variables:
-age: Age of the individual (in years).
-sex: Gender of the individual (male/female).
-bmi: Body Mass Index, calculated as weight in kg divided by the square of height in meters.
-children: Number of children/dependents covered by the insurance plan.
-smoker: Whether the individual is a smoker (yes/no).
-region: The geographical region of the individual (e.g., southeast, northwest).
-charges: The medical insurance cost is billed to the individual (in dollars).
+- age: Age of the individual (in years).
+- sex: Gender of the individual (male/female).
+- bmi: Body Mass Index, calculated as weight in kg divided by the square of height in meters.
+- children: Number of children/dependents covered by the insurance plan.
+- smoker: Whether the individual is a smoker (yes/no).
+- region: The geographical region of the individual (e.g., southeast, northwest).
+- charges: The medical insurance cost is billed to the individual (in dollars).
 
 # Introduction
 This model aims to predict medical insurance charges, taking into account potential factors that may influence the varying costs of medical care. The predictive power derived from the models will prove crucial to medical insurance providers in characterizing optimal resource allocation and developing effective pricing strategies.
