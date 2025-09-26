@@ -55,10 +55,10 @@ ggplot(data, aes(x=factor(smoker), y=charges)) +
 ```
 
 ![Correlogram](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.14.28.png)
-:Correlogram
+- Correlogram
 
 ![boxplot](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.14.59.png)
-:Zoomed-in ‘smoker’ boxplot from correlogram
+- Zoomed-in ‘smoker’ boxplot from correlogram
 
 We can deduce that the numerical predictors, ‘age’ (0.299) and ‘bmi’ (0.198) show greater correlation with the outcome variable ‘charges’ . This is indicative of the complementary increase in the volume of medical care along its charges that accompany growing age and bmi. Amongst categorical variables, ‘smoker’ predicts individuals who smoke to be more susceptible to higher medical chargers. The boxplot supports this correlation, where smokers displays a higher mean and range of charges compared to non-smokers, making clear the effect of smoking history on medical insurance prices. The correlogram also display faint signs of collinearity between ‘ages’ and ‘bmi’, holding a relatively low correlational strength of 0.109 supported by a 0.05 significance. The weak relationship limits its ability to disturb the combinatorial significance of the predictors, expunging the need to address it at this stage.
 
@@ -106,12 +106,12 @@ points(which.max(reg.summary$adjr2), reg.summary$adjr2[which.max(reg.summary$adj
 coef(regfit.full, 6)
 ```
 ![subset selection model](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.15.24.png)
-:Performance metrics for subset selection model
+- Performance metrics for subset selection model
 
 The corresponding C_p and BIC select the model with 4 predictors to be the best fit model for this dataset. BIC selects the model with 4 predictors to show the lowest BIC score, prioritizing goodness of fit and simplicity. This is because the BIC statistic tends to behave in a stricter manner, attaching heavier penalty on models with several variables and higher complexity. C_p on the other hand, assumes linearity, which restricts the scope of the models I can form to best predict ‘charges’. For this reason, I will follow the suggestion made by R^2, choosing to obtain higher explanatory power over parsimony, selecting the 6 predictors evident in table 1 to be my key variables.
 
 ![coeeficients of subset selection](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.15.53.png)
-:Coefficients of variables selected (subset selection)
+- Coefficients of variables selected (subset selection)
 
 ## Model 1 - Linear Model
 Now fitting my models, my primary design will be a linear model, combining the predictive power of the 6 variables previously chosen.
@@ -175,7 +175,7 @@ rmse_gam #6238.377
 The GAM can address covert complexities and non-linear predictive inconsistencies through the inclusion of splines. To form my model, I clubbed the continuous variables to run under smoothing splines, automatically assigning knots to limit the possibility of inaccurate input. Additionally, I converted ‘children’ to a factor variable to capture any non-linear trend of marginal increase in charges for children, enhancing flexibility, interpretability, and accuracy. The GAM plot with a MSE of 38917346, show slight improvements from the linear model, confirming the presence of non-linearity.
 
 ![GAM plot](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.16.17.png)
-:GAM plot
+- GAM plot
 
 The ‘bmi’ in the GAM plot display greater complexity, somewhat mimicking an upside-down u-shape that limits interpretability. For this reason, I will transform ‘bmi’ into a categorical variable using the standard clinical classifications established by WHO. Additionally, I will adopt feature engineering to include an interaction term for bmi_category*smoker, targeting the unexplained effect that may stem from the large coefficient observed from ‘smoker’. This term can account for overlooked interactions like higher medical charges that appear amongst obese individuals who smoke, risking cardiovascular disease, respiratory problems, and other comorbidities compared to obese non-smokers or normal-weight smokers. 
 
@@ -221,7 +221,7 @@ rmse_gam2 #4751.249
 ```
 
 ![Improved GAM](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.16.35.png)
-:Improved GAM (GAM2)
+- Improved GAM (GAM2)
 
 The improved GAM generates a MSE of 22574364, showing significant improvement from my first model illustrating better goodness of fit.
 
@@ -261,7 +261,7 @@ cat("Adjusted R^2:", adjusted_r_squared, "\n")
 ```
 
 ![regression tree plot](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.16.52.png)
-:Regression tree plot
+- Regression tree plot
 
 The regression tree already presents itself to be simple enough, inserting pruning into the equation may not prove necessary. The MSE of this model amounts to 28267864 which is still higher than our previous GAM model. This motivates me to consider an alternative approach that may offer a better goodness of fit.
 
@@ -305,7 +305,7 @@ varImpPlot(rf_model)
 ```
 
 ![random forest](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.18.57.png)
-:Random Forest regression plot
+- Random Forest regression plot
 
 The Random Forest plot ranks the significant variables in terms of its importance to the model’s predictive accuracy, extending the hierarchy established by the regression tree and generating its test MSE to be 23755135.
 
@@ -347,13 +347,13 @@ print(results)
 ```
 
 ![model comparison](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.19.13.png)
-:Model comparisons: Predicted vs Actual charges
+- Model comparisons: Predicted vs Actual charges
 
 ![RMSE](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.19.30.png)
-:RMSE for all models
+- RMSE for all models
 
 ![MSE](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.19.51.png)
-:MSE for all models
+- MSE for all models
 
 # Model evaluation
 ```{r}
@@ -380,7 +380,7 @@ print(cv_gam2)
 For the final selection of my model, I will rely on MSE to evaluate how well each model performs on predicting insurance charges. GAM2 seems to perform best, holding the lowest MSE of 22574364, and RMSE of 4751.249. Simultaneously, GAM2 displays low residuals, maintaining predictive accuracy consistently, even along higher charges where the other models cannot keep up. Although Random Forest hold the highest Adjusted R-squared, because of the model’s flexible nature (ensemble of trees), it may reflect signs of overfitting, averting our focus away from R-squared and towards MSE, RMSE and cross-validation.
 
 ![K-cross validation](https://github.com/paveena-boop/Predictive-Modeling-of-Medical-Insurance-Charges/blob/443e67333285db748ce645ffaf37db7f116b4789/images/Screenshot%202568-09-26%20at%2016.20.11.png)
-:K-cross validation on GAM2
+- K-cross validation on GAM2
 
 My final model – GAM2 remains significant, explaining 87.4% of the variations in charges maintaining the goodness of fit of the model. Additionally, I executed k-fold cross validation (cv) (10 folds) to determine how well it performs on independent data. I choose this approach over LOOCV to evade the higher variance that accompanies LOOCV’s test errors. Table 5 (green) show the cv’s preference for the FALSE model, basing it on the lower RMSE – 4422.170. The GAM fitted to the training dataset is slightly more flexible in comparison and can capture additional noise specific to the training dataset. This may not generalize well to the testing data set and subsequently display signs of overfitting as seen with the cv displaying lower RMSE and R-squared in comparison to the GAM based on the training dataset.
 
